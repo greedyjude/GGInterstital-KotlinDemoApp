@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.greedygame.core.AppConfig
 import com.greedygame.core.GreedyGameAds
-import com.greedygame.core.adview.modals.AdRequestErrors
 import com.greedygame.core.interstitial.general.GGInterstitialAd
 import com.greedygame.core.interstitial.general.GGInterstitialEventsListener
+import com.greedygame.core.models.general.AdErrors
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadIntersitialAd() {
         progressBar.visibility = View.VISIBLE
-        ggInterstitialAd.loadAd(eventListener)
+        ggInterstitialAd.setListener(eventListener)
+        ggInterstitialAd.loadAd()
 
     }
 
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        override fun onAdLoadFailed(cause: AdRequestErrors) {
+        override fun onAdLoadFailed(cause: AdErrors) {
             Log.d("GGADS", "Ad Load Failed $cause")
             progressBar.visibility = View.GONE
             Toast.makeText(this@MainActivity, "Ad Load failed $cause", Toast.LENGTH_SHORT).show()
@@ -92,8 +93,8 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
 
-        override fun onAdLeftApplication() {
-            Log.d("GGADS", "Ad Left Application")
+        override fun onAdShowFailed() {
+            Log.d("GGADS", "Ad Show, try loading the ad again")
         }
     }
 }

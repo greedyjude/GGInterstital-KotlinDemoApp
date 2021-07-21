@@ -3,12 +3,11 @@ package com.greedygame.gginterstitalkotlindemoapp
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.greedygame.core.adview.modals.AdRequestErrors
 import com.greedygame.core.interstitial.general.GGInterstitialAd
 import com.greedygame.core.interstitial.general.GGInterstitialEventsListener
+import com.greedygame.core.models.general.AdErrors
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_second.*
 
@@ -47,7 +46,8 @@ class SecondActivity : AppCompatActivity() {
     }
 
     private fun loadIntersitialAd() {
-        ggInterstitialAd.loadAd(eventListener)
+        ggInterstitialAd.setListener(eventListener)
+        ggInterstitialAd.loadAd()
     }
 
     inner class InterstitialEventListener : GGInterstitialEventsListener {
@@ -60,7 +60,7 @@ class SecondActivity : AppCompatActivity() {
             }
         }
 
-        override fun onAdLoadFailed(cause: AdRequestErrors) {
+        override fun onAdLoadFailed(cause: AdErrors) {
             Log.d("GGADS", "Ad Load Failed $cause")
             Toast.makeText(this@SecondActivity, "Ad Load failed $cause", Toast.LENGTH_SHORT).show()
             //Called when the ad load failed. The reason is available in cause variable
@@ -80,8 +80,8 @@ class SecondActivity : AppCompatActivity() {
             finish()
         }
 
-        override fun onAdLeftApplication() {
-            Log.d("GGADS", "Ad Left Application")
+        override fun onAdShowFailed() {
+            Log.d("GGADS", "Ad Show failed. Try reloading the ad")
         }
     }
 }
